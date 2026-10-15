@@ -31,11 +31,11 @@ function idSesion() {
 const recortar = (v, max) => (v ? String(v).slice(0, max) : undefined)
 
 /**
- * Guarda de donde llego el visitante la primera vez en la sesion (UTM y referrer externo).
+ * Guarda de donde llego el visitante (UTM y referrer externo). Si la carga trae datos de origen,
+ * pisan a los anteriores (cuenta la ultima campania); si no trae ninguno, se conserva lo guardado.
  * Se llama una vez al cargar la app.
  */
 export function capturarOrigen() {
-  if (leer(CLAVE_ORIGEN)) return
   const params = new URLSearchParams(window.location.search)
   const origen = {}
   for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
@@ -48,7 +48,9 @@ export function capturarOrigen() {
   } catch {
     /* referrer invalido: se ignora */
   }
-  guardar(CLAVE_ORIGEN, JSON.stringify(origen))
+  if (Object.keys(origen).length || !leer(CLAVE_ORIGEN)) {
+    guardar(CLAVE_ORIGEN, JSON.stringify(origen))
+  }
 }
 
 /** Datos de trazabilidad que acompanian a cualquier envio (click o formulario). */
