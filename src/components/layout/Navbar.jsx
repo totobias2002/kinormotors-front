@@ -48,7 +48,7 @@ export default function Navbar({ sobreHero = false }) {
       {movilAbierto && <MenuMovil onCerrar={() => setMovilAbierto(false)} />}
 
       {/* Escritorio */}
-      <div className="mx-auto hidden max-w-[1469px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-20 py-4 md:grid">
+      <div className="hidden grid-cols-[1fr_auto_1fr] items-center gap-2 px-20 py-4 md:grid">
         <button
           type="button"
           aria-expanded={abierto}

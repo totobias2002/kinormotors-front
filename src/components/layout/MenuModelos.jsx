@@ -25,7 +25,7 @@ export default function MenuModelos({ onCerrar, enLinea = false }) {
   return (
     <div className={enLinea ? 'bg-white text-navy' : 'absolute inset-x-0 top-full max-h-[calc(100svh-5rem)] overflow-y-auto bg-white text-navy shadow-2xl'}>
       <div className="bg-gris">
-        <fieldset className={enLinea ? 'grid grid-cols-2' : 'mx-auto flex max-w-[1469px] gap-x-6 gap-y-2 overflow-x-auto px-4 py-4 md:px-20'}>
+        <fieldset className={enLinea ? 'grid grid-cols-2' : 'flex gap-x-6 gap-y-2 overflow-x-auto px-4 py-4 md:px-20'}>
           <legend className="sr-only">Filtrar modelos</legend>
           {FILTROS.map((f) => (
             <label key={f} className={`flex cursor-pointer items-center gap-2 text-sm ${enLinea ? 'border-b border-r border-slate-200 px-4 py-3 even:border-r-0' : 'shrink-0'}`}>
@@ -39,7 +39,7 @@ export default function MenuModelos({ onCerrar, enLinea = false }) {
         </fieldset>
       </div>
 
-      <ul className={enLinea ? 'grid grid-cols-1 gap-y-6 px-4 py-6' : 'mx-auto grid max-w-[1469px] grid-cols-2 gap-x-4 gap-y-8 px-4 py-8 md:grid-cols-4 md:px-20'}>
+      <ul className={enLinea ? 'grid grid-cols-1 gap-y-6 px-4 py-6' : 'grid grid-cols-2 gap-x-4 gap-y-8 px-4 py-8 md:grid-cols-4 md:px-20'}>
         {visibles.map((m) => (
           <li key={m.slug} className="relative flex flex-col items-center text-center">
             {NUEVOS.includes(m.slug) && <img src="/assets/iconos/nuevo.svg" alt="Nuevo" className="absolute left-0 top-0 h-5 w-auto md:left-6" />}
