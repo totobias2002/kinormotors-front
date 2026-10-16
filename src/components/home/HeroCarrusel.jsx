@@ -1,33 +1,32 @@
-import { useCallback, useEffect, useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { useModelos } from '../../context/ModelosContext'
+import { useEffect, useState } from 'react'
 import EnlaceWhatsapp from '../comun/EnlaceWhatsapp'
-import { registrarClick } from '../../services/tracking'
+import { HERO_SLIDES } from '../../data/heroSlides'
 
-const INTERVALO_MS = 6500
+const INTERVALO_MS = 6000
 
 /**
- * Banner rotativo con los modelos destacados. El texto de financiacion/precio solo aparece si el back
- * lo habilita (interruptor general + el del modelo); mientras tanto no se muestra.
+ * Banner a pantalla completa con los mismos slides que Kia. Cada boton abre WhatsApp con el modelo del slide
+ * (y queda registrado para la trazabilidad). Pausa al pasar el mouse o con foco; respeta "reducir movimiento".
  */
 export default function HeroCarrusel() {
-  const { slidesHero } = useModelos()
   const [actual, setActual] = useState(0)
   const [pausado, setPausado] = useState(false)
-
-  const total = slidesHero.length
-  const ir = useCallback((i) => setActual(((i % total) + total) % total), [total])
+  const total = HERO_SLIDES.length
+  const slide = HERO_SLIDES[actual]
 
   useEffect(() => {
     const sinMovimiento = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    if (pausado || total < 2 || sinMovimiento) return
+    if (pausado || sinMovimiento) return
     const id = setInterval(() => setActual((a) => (a + 1) % total), INTERVALO_MS)
     return () => clearInterval(id)
   }, [pausado, total])
 
-  if (!total) return null
-  const slide = slidesHero[actual % total]
+  // Precarga la imagen del slide siguiente para que el cambio no parpadee
+  useEffect(() => {
+    const siguiente = HERO_SLIDES[(actual + 1) % total]
+    const vertical = window.matchMedia?.('(max-width: 767px)').matches
+    new Image().src = vertical ? siguiente.mobile : siguiente.desktop
+  }, [actual, total])
 
   return (
     <section
@@ -37,62 +36,40 @@ export default function HeroCarrusel() {
       onMouseLeave={() => setPausado(false)}
       onFocus={() => setPausado(true)}
       onBlur={() => setPausado(false)}
-      className="relative flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-br from-navy via-navy-soft to-slate-700 text-white"
+      className="relative h-[100svh] min-h-[560px] overflow-hidden bg-navy text-white"
     >
-      {slide.imagenHeroUrl && (
-        <img src={slide.imagenHeroUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent" aria-hidden="true" />
+      <picture key={slide.id} className="animate-aparecer">
+        <source media="(min-width: 768px)" srcSet={slide.desktop} />
+        <img src={slide.mobile} alt={slide.titulo ? `Kia ${slide.titulo}` : slide.boton} className="absolute inset-0 h-full w-full object-cover" />
+      </picture>
+      <div className={`absolute inset-0 ${slide.overlay ? 'bg-black/25' : 'bg-gradient-to-t from-black/45 via-transparent to-transparent'}`} aria-hidden="true" />
 
-      <div key={slide.slug} aria-live="polite" className="animate-aparecer relative z-10 mx-auto w-full max-w-[1400px] px-6 pb-44 pt-40 sm:px-8 sm:pb-32">
-        <p className="mb-2 text-sm font-bold uppercase tracking-[0.3em] text-white/70">Kia</p>
-        <h1 className="text-5xl font-black leading-none sm:text-7xl">{slide.nombre}</h1>
-        {slide.tagline && <p className="mt-4 max-w-xl text-xl text-white/90 sm:text-2xl">{slide.tagline}</p>}
-        {slide.mostrarFinanciacion && slide.textoFinanciacion && (
-          <p className="mt-3 inline-block rounded bg-kia-red px-3 py-1.5 text-base font-bold sm:text-lg">
-            {slide.textoFinanciacion}
-          </p>
-        )}
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            to={`/#modelo-${slide.slug}`}
-            onClick={() => registrarClick({ tipoAccion: 'PROMOCION', modeloSlug: slide.slug, seccion: 'hero-conocer-mas' })}
-            className="rounded-md bg-white px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-navy transition hover:bg-slate-200"
-          >
-            Conocer más
-          </Link>
-          <EnlaceWhatsapp
-            modelo={slide}
-            seccion="hero"
-            className="rounded-md border-2 border-white px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-white hover:text-navy"
-          >
-            {slide.slug === 'tasman' ? `Quiero mi ${slide.nombre}` : 'Consultar por WhatsApp'}
-          </EnlaceWhatsapp>
-        </div>
+      <div key={`t-${slide.id}`} aria-live="polite" className="animate-aparecer absolute inset-x-0 bottom-[4.5rem] z-10 flex flex-col items-center px-6 text-center md:bottom-20">
+        {slide.titulo && <h1 className="text-[2rem] font-extrabold leading-tight xl:text-[2.25rem] 2xl:text-[4rem]">{slide.titulo}</h1>}
+        {slide.subtitulo && <p className="mt-1 text-base md:text-lg">{slide.subtitulo}</p>}
+        <EnlaceWhatsapp
+          modelo={slide.modelo}
+          seccion="hero"
+          className="mt-5 inline-block min-w-[168px] bg-white px-8 py-[1.15rem] text-base font-bold text-navy transition hover:bg-slate-200 md:mt-6"
+        >
+          {slide.boton}
+        </EnlaceWhatsapp>
       </div>
 
-      {total > 1 && (
-        <div className="absolute inset-x-0 bottom-24 z-10 flex items-center justify-center gap-4 sm:bottom-8">
-          <button type="button" onClick={() => ir(actual - 1)} aria-label="Modelo anterior" className="rounded-full bg-white/15 p-2 transition hover:bg-white/30">
-            <ChevronLeft aria-hidden="true" className="h-5 w-5" />
+      <div className="absolute inset-x-0 bottom-4 z-10 flex justify-center md:bottom-6" role="group" aria-label="Elegir modelo">
+        {HERO_SLIDES.map((s, i) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setActual(i)}
+            aria-label={`Ver slide ${i + 1} de ${total}`}
+            aria-current={i === actual}
+            className="group px-[3.5px] py-3"
+          >
+            <span className={`block h-[3px] w-[22px] transition-colors md:w-8 ${i === actual ? 'bg-white' : 'bg-white/45 group-hover:bg-white/80'}`} />
           </button>
-          <div className="flex gap-2">
-            {slidesHero.map((s, i) => (
-              <button
-                key={s.slug}
-                type="button"
-                onClick={() => ir(i)}
-                aria-label={`Ver ${s.nombre}`}
-                aria-current={i === actual}
-                className={`h-2.5 rounded-full transition-all ${i === actual ? 'w-8 bg-white' : 'w-2.5 bg-white/50'}`}
-              />
-            ))}
-          </div>
-          <button type="button" onClick={() => ir(actual + 1)} aria-label="Modelo siguiente" className="rounded-full bg-white/15 p-2 transition hover:bg-white/30">
-            <ChevronRight aria-hidden="true" className="h-5 w-5" />
-          </button>
-        </div>
-      )}
+        ))}
+      </div>
     </section>
   )
 }

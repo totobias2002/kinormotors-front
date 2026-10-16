@@ -1,10 +1,11 @@
 /**
  * Imagen del modelo. Mientras no haya foto cargada (imagenUrl) muestra un placeholder con el nombre.
- * TODO: cargar las imagenes reales (en public/assets/modelos/ o desde el admin); nada de hotlinking a kia.com.ar.
+ * Las imagenes viven en public/assets/modelos/ (o se cargan desde el admin); nada de hotlinking a kia.com.ar.
+ * Hoy son miniaturas de 304x88: TODO pedir las fotos en alta a Kia / Javier.
  */
 export default function ModeloImagen({ modelo, className = '' }) {
   if (modelo.imagenUrl) {
-    return <img src={modelo.imagenUrl} alt={`Kia ${modelo.nombre}`} loading="lazy" className={`object-cover ${className}`} />
+    return <img src={modelo.imagenUrl} alt={`Kia ${modelo.nombre}`} loading="lazy" className={`bg-white object-contain p-4 ${className}`} />
   }
   return (
     <div

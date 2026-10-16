@@ -1,43 +1,43 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
 import { registrarClick } from '../../services/tracking'
 
-const ACCESOS = [
-  { a: '/turnos', texto: 'Turnos online', seccion: 'split-turnos', tipo: 'TURNO' },
-  { a: '/posventa', texto: 'Posventa', seccion: 'split-posventa' },
-  { a: '/garantia', texto: 'Garantía', seccion: 'split-garantia' },
+/** Tarjetas de la derecha. Se quitaron "Concesionarios" (pedido de la agencia): quedan Turno Online, Post Venta y Garantía. */
+const TARJETAS = [
+  { a: '/turnos', texto: 'Turno Online', icono: 'turno', fondo: 'bg-[#37434c]', ancho: 'col-span-2', tipo: 'TURNO', seccion: 'split-turnos' },
+  { a: '/posventa', texto: 'Post Venta', icono: 'postventa', fondo: 'bg-[#aab3b9]', seccion: 'split-posventa' },
+  { a: '/garantia', texto: 'Garantía', icono: 'garantia', fondo: 'bg-[#848c94]', seccion: 'split-garantia' },
 ]
 
-/** Pantalla dividida: promociones a la izquierda, accesos rapidos a la derecha. */
+/** Pantalla dividida: promociones a la izquierda, accesos rapidos a la derecha (en celular van uno debajo del otro). */
 export default function PantallaDividida() {
   return (
-    <section aria-label="Promociones y servicios" className="grid md:grid-cols-2">
+    <section aria-label="Promociones y servicios" className="grid md:h-[695px] md:grid-cols-2">
       <Link
         to="/promociones"
         onClick={() => registrarClick({ tipoAccion: 'PROMOCION', seccion: 'split-promociones' })}
-        className="group relative flex min-h-[420px] items-end overflow-hidden bg-gradient-to-br from-slate-700 via-slate-600 to-slate-500 p-8 text-white md:min-h-[560px]"
+        className="group relative flex h-[420px] items-end overflow-hidden md:h-full"
       >
-        {/* TODO: reemplazar el fondo por la imagen del vehiculo con promociones */}
-        <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent" aria-hidden="true" />
-        <div className="relative z-10">
-          <h2 className="text-4xl font-black sm:text-5xl">Promociones</h2>
-          <span className="mt-5 inline-flex translate-y-2 items-center gap-2 rounded-md bg-kia-red px-6 py-3 text-sm font-extrabold uppercase tracking-wide opacity-100 shadow-lg transition group-hover:translate-y-0 group-hover:bg-kia-red-dark md:opacity-90 md:group-hover:opacity-100">
-            Saber más
-            <ArrowRight aria-hidden="true" className="h-4 w-4" />
+        <img src="/assets/modelos/promociones.webp" alt="SUV Kia en camino rural" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" aria-hidden="true" />
+        <div className="relative z-10 p-6 text-white md:p-12">
+          <h2 className="text-3xl font-bold md:text-4xl">Promociones</h2>
+          <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold">
+            <span aria-hidden="true" className="text-xl leading-none">+</span>
+            <span className="group-hover:underline">Saber más</span>
           </span>
         </div>
       </Link>
 
-      <div className="flex flex-col bg-gris">
-        {ACCESOS.map((item) => (
+      <div className="grid grid-cols-2 md:grid-rows-2">
+        {TARJETAS.map((t) => (
           <Link
-            key={item.a}
-            to={item.a}
-            onClick={() => item.tipo && registrarClick({ tipoAccion: item.tipo, seccion: item.seccion })}
-            className="group flex flex-1 items-center justify-between border-b border-slate-300 px-8 py-10 text-2xl font-black transition last:border-b-0 hover:bg-navy hover:text-white sm:text-3xl md:py-0"
+            key={t.a}
+            to={t.a}
+            onClick={() => t.tipo && registrarClick({ tipoAccion: t.tipo, seccion: t.seccion })}
+            className={`${t.ancho ?? ''} ${t.fondo} flex flex-col items-center justify-center gap-3 text-white transition hover:brightness-110 md:min-h-[170px] ${t.ancho ? 'h-[195px]' : 'aspect-square md:aspect-auto'}`}
           >
-            {item.texto}
-            <ArrowRight aria-hidden="true" className="h-6 w-6 transition group-hover:translate-x-2" />
+            <img src={`/assets/iconos/${t.icono}.svg`} alt="" className="h-12 w-12" />
+            <span className="text-lg font-bold">{t.texto}</span>
           </Link>
         ))}
       </div>

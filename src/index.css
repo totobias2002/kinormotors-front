@@ -11,10 +11,14 @@
 
 html {
   scroll-behavior: smooth;
+  /* Nunca se puede arrastrar el sitio de costado en celular */
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
 }
 
 body {
   margin: 0;
+  overflow-x: clip; /* clip (y no hidden) para no romper el header sticky */
   background: #fff;
   color: var(--color-navy);
   font-family: var(--font-sans);

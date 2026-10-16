@@ -22,7 +22,7 @@ export const SITIO = {
     instagram: '',
     facebook: '',
     youtube: '',
-    tiktok: '',
+    x: '',
   },
 
   // Video de la seccion "Dominá tu movimiento". Vacio = se muestra un fondo.
