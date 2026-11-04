@@ -36,7 +36,7 @@ src/
   routes/     AppRouter (el panel admin se carga aparte, con lazy)
   services/   api.js (axios + token admin) y tracking.js (origen de la visita y registro de clicks)
   utils/      whatsapp.js (arma el link wa.me) y errores.js
-public/assets/  logo-kinor-motors.svg (placeholder)
+public/assets/  logo-kinor-motors.png (logo oficial, blanco con transparencia)
 ```
 
 ## Cómo se configura lo pendiente
@@ -46,7 +46,7 @@ public/assets/  logo-kinor-motors.svg (placeholder)
 | Número de WhatsApp | `VITE_WHATSAPP_NUMERO` (o `config/sitio.js`) |
 | Redes sociales | `config/sitio.js` → `redes` (vacías = botón sin link) |
 | Dirección, horarios, teléfono | `config/sitio.js` |
-| Logo | reemplazar `public/assets/logo-kinor-motors.svg` (mismo nombre) |
+| Logo | reemplazar `public/assets/logo-kinor-motors.png` (PNG blanco con transparencia, mismo nombre) |
 | Video de la sección "Dominá tu movimiento" | `VITE_VIDEO_HOME_URL` |
 | Imágenes de modelos | `imagenUrl` / `imagenHeroUrl` del modelo (admin o JSON); no se enlaza a kia.com.ar |
 | Financiación / precios | Oculta. Se muestra solo con el interruptor general + el del modelo (panel admin) |

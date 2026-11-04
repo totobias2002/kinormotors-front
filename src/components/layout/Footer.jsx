@@ -61,7 +61,7 @@ export default function Footer() {
     <footer className="bg-navy text-white">
       <div className="mx-auto grid max-w-[1469px] gap-10 px-6 py-12 md:grid-cols-[2fr_1fr_1fr] md:px-20">
         <div className="space-y-6">
-          <Logo claro className="h-9" />
+          <Logo claro className="h-14" />
           {/* Las redes se muestran siempre; sin URL cargada en config/sitio.js quedan sin link */}
           <ul className="-ml-3 flex gap-1.5" aria-label="Redes sociales">
             {REDES.map(({ clave, nombre, icono }) => {

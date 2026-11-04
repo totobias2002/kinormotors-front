@@ -39,7 +39,7 @@ export default function Navbar({ sobreHero = false }) {
       {/* Celular: hamburguesa a la derecha (al alcance del pulgar derecho) y el logo en el medio del espacio que queda a su izquierda */}
       <div className={`flex h-[55px] items-center border-b px-4 md:hidden ${transparente ? 'border-white/40' : 'border-transparent'}`}>
         <div className="flex flex-1 justify-center">
-          <Logo claro={transparente} className="h-6" />
+          <Logo claro={transparente} className="h-9" />
         </div>
         <button type="button" onClick={() => setMovilAbierto(true)} aria-label="Abrir menú" aria-haspopup="dialog" className="-mr-2 p-2">
           <Menu aria-hidden="true" className="h-6 w-6" />
@@ -59,7 +59,7 @@ export default function Navbar({ sobreHero = false }) {
           Modelos
         </button>
 
-        <Logo claro={transparente} className="h-8" />
+        <Logo claro={transparente} className="h-12" />
 
         <Link to="/posventa" onClick={() => setAbierto(false)} className="justify-self-end text-base font-bold hover:underline hover:underline-offset-4">
           Post Venta
